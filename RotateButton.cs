@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class RotateButton: MonoBehaviour
+public class RotateButton : MonoBehaviour
 {
-    public Vector3 initialRotationSpeed = new Vector3(0f, 0f, 1500f); // ‰Šú‰ñ“]‘¬“x
-    public float decelerationRate = 0.994f; // Œ¸‘¬—¦i1–¢–‚Ì’lj
-    public float minRotationSpeed = 5f; // ‰ñ“]‚ğ’â~‚·‚é‚½‚ß‚ÌÅ¬‘¬“x
+    public Vector3 minRotationSpeed = new Vector3(0f, 0f, 1400f); // Å¬‰ñ“]‘¬“x
+    public Vector3 maxRotationSpeed = new Vector3(0f, 0f, 1700f); // Å‘å‰ñ“]‘¬“x
+    public float minDecelerationRate = 0.996f; // Å¬Œ¸‘¬—¦
+    public float maxDecelerationRate = 0.999f; // Å‘åŒ¸‘¬—¦
+    public float minRotationSpeedThreshold = 5f; // ‰ñ“]‚ğ’â~‚·‚é‚½‚ß‚ÌÅ¬‘¬“x
     private Vector3 rotationSpeed; // Œ»İ‚Ì‰ñ“]‘¬“x‚ğŠi”[‚·‚é•Ï”
+    private float decelerationRate; // Œ»İ‚ÌŒ¸‘¬—¦‚ğŠi”[‚·‚é•Ï”
     private bool isRotating = false; // ‰ñ“]’†‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
 
     void Start()
@@ -27,7 +29,7 @@ public class RotateButton: MonoBehaviour
             rotationSpeed *= decelerationRate;
 
             // ‰ñ“]‘¬“x‚ªˆê’è’lˆÈ‰º‚É‚È‚Á‚½‚ç’â~‚·‚é
-            if (rotationSpeed.magnitude < minRotationSpeed)
+            if (rotationSpeed.magnitude < minRotationSpeedThreshold)
             {
                 rotationSpeed = Vector3.zero; // ‰ñ“]‚ğ’â~
                 isRotating = false; // ‰ñ“]ƒtƒ‰ƒO‚ğ‰ğœ
@@ -40,7 +42,13 @@ public class RotateButton: MonoBehaviour
     {
         if (!isRotating)
         {
-            rotationSpeed = initialRotationSpeed; // ‰Šú‰ñ“]‘¬“x‚ğİ’è
+            // z²‚Ì‰Šú‰ñ“]‘¬“x‚ğƒ‰ƒ“ƒ_ƒ€‚Éİ’è
+            float randomZ = Random.Range(minRotationSpeed.z, maxRotationSpeed.z);
+            rotationSpeed = new Vector3(0f, 0f, randomZ);
+
+            // Œ¸‘¬—¦‚ğƒ‰ƒ“ƒ_ƒ€‚Éİ’è
+            decelerationRate = Random.Range(minDecelerationRate, maxDecelerationRate);
+
             isRotating = true; // ‰ñ“]ƒtƒ‰ƒO‚ğƒZƒbƒg
         }
     }
